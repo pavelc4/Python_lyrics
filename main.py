@@ -25,7 +25,6 @@ def main():
     
     # Path ke file audio
     audio_path = "/home/vell/Documents/prjkt/py/asset/song.mp3"  # Ganti dengan path yang benar
-    print("Loading audio from:", audio_path)  # Debugging path
 
     # Cek apakah file ada
     if not os.path.isfile(audio_path):

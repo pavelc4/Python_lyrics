@@ -1,34 +1,39 @@
 import time
 import sys
-import pygame
 import os
+import contextlib
 
-def tampilkan_lirik(lirik, durasi, delay_awal, kecepatan):
-    for i, baris in enumerate(lirik):
-        # Tambahkan delay sebelum menampilkan lirik
-        time.sleep(delay_awal)  # Delay sebelum menampilkan lirik
+# Suppress pygame output (including "Hello from the pygame community" message)
+with open(os.devnull, 'w') as fnull:
+    with contextlib.redirect_stdout(fnull):
+        import pygame
 
-        # Tampilkan setiap kata dalam baris
-        for kata in baris.split():
-            # Tampilkan kata dengan efek pengetikan
-            for huruf in kata:
-                print(huruf, end='', flush=True)  # Tampilkan huruf tanpa newline
-                time.sleep(kecepatan)  # Delay sesuai kecepatan per huruf
-            print(' ', end='', flush=True)  # Tambahkan spasi setelah kata
-            time.sleep(0.2)  # Delay tambahan setelah setiap kata
-        print()  # Pindah ke baris baru setelah semua kata ditampilkan
-        time.sleep(durasi[i])  # Delay sesuai durasi yang ditentukan
+def display_lyrics(lyrics, durations, initial_delay, typing_speed):
+    for i, line in enumerate(lyrics):
+        # Add delay before displaying the lyrics
+        time.sleep(initial_delay)  # Delay before showing the lyrics
+
+        # Display each word in the line
+        for word in line.split():
+            # Show each word with typing effect
+            for letter in word:
+                print(letter, end='', flush=True)  # Display letter without newline
+                time.sleep(typing_speed)  # Delay based on typing speed per letter
+            print(' ', end='', flush=True)  # Add space after each word
+            time.sleep(0.2)  # Additional delay after each word
+        print()  # Move to the next line after all words are shown
+        time.sleep(durations[i])  # Delay based on the duration for each line
 
 def main():
-    # Inisialisasi pygame
+    # Initialize pygame
     pygame.mixer.init()
     
-    # Path ke file audio
-    audio_path = "/home/vell/Documents/prjkt/py/asset/song.mp3"  # Ganti dengan path yang benar
+    # Path to the audio file
+    audio_path = "asset/song.mp3"  # Replace with the path to your audio file
 
-    # Cek apakah file ada
+    # Check if the file exists
     if not os.path.isfile(audio_path):
-        print("File tidak ditemukan:", audio_path)
+        print("File not found:", audio_path)
         return
 
     try:
@@ -38,8 +43,8 @@ def main():
         print("Error loading audio file:", e)
         return
 
-    # Lirik dan durasi (dalam detik) untuk setiap baris
-    lirik = [
+    # Lyrics and duration (in seconds) for each line
+    lyrics = [
         "Hold my hands, dont-dont tell your friends",
         "Cerita kemaren, ku ingat kermanen",
         "Manis mu kaya permen, I hope this never end",
@@ -51,19 +56,19 @@ def main():
         "Ku bayangkan tubuhmu jika di pelukanku"
     ]
     
-    # Durasi untuk setiap baris lirik (sesuaikan dengan lagu)
-    durasi = [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]  # Ganti dengan durasi yang sesuai
+    # Duration for each line of lyrics (adjust according to the song)
+    durations = [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]  # Replace with the appropriate durations
 
-    # Delay sebelum menampilkan lirik (dalam detik)
-    delay_awal = 0.1  # Ganti dengan nilai yang sesuai untuk sinkronisasi
+    # Initial delay before showing the lyrics (in seconds)
+    initial_delay = 0.1  # Adjust for synchronization with the music
 
-    # Kecepatan pengetikan (dalam detik)
-    kecepatan = 0.04  # Ganti dengan nilai yang sesuai untuk kecepatan pengetikan
+    # Typing speed (in seconds)
+    typing_speed = 0.04  # Adjust the typing speed for better readability
 
-    # Tampilkan lirik
-    tampilkan_lirik(lirik, durasi, delay_awal, kecepatan)
+    # Display lyrics
+    display_lyrics(lyrics, durations, initial_delay, typing_speed)
 
-    # Tunggu sampai lagu selesai
+    # Wait until the song finishes playing
     while pygame.mixer.music.get_busy():
         time.sleep(1)
 
